@@ -1,0 +1,237 @@
+// Prisma Schema for Vibe Coding
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  username      String   @unique
+  passwordHash  String
+
+  // Profile
+  firstName     String?
+  lastName      String?
+  avatarUrl     String?
+
+  // Progress
+  currentLevel  Int      @default(1)
+  totalXP       Int      @default(0)
+
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastActiveAt  DateTime @default(now())
+
+  // Relations
+  attempts      Attempt[]
+  solutions     Solution[]
+  skills        UserSkill[]
+  achievements  UserAchievement[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Challenge {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+
+  // Content
+  title         String
+  description   String   @db.Text
+  instructions  String   @db.Text
+  starterCode   String?  @db.Text
+  solution      String   @db.Text
+
+  // Metadata
+  module        String
+  difficulty    Int
+  estimatedTime Int
+  concepts      String[]
+
+  // Test cases (JSON)
+  testCases     Json
+
+  // Hints (JSON array)
+  hints         Json
+
+  // Order in module
+  order         Int
+
+  // Relations
+  attempts      Attempt[]
+  solutions     Solution[]
+  prerequisites ChallengePrerequisite[] @relation("PrereqTo")
+  dependents    ChallengePrerequisite[] @relation("PrereqFrom")
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([module, order])
+  @@index([difficulty])
+}
+
+model ChallengePrerequisite {
+  challengeId     String
+  prerequisiteId  String
+
+  challenge       Challenge @relation("PrereqTo", fields: [challengeId], references: [id])
+  prerequisite    Challenge @relation("PrereqFrom", fields: [prerequisiteId], references: [id])
+
+  @@id([challengeId, prerequisiteId])
+}
+
+model Attempt {
+  id              String   @id @default(uuid())
+
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  challengeId     String
+  challenge       Challenge @relation(fields: [challengeId], references: [id])
+
+  // Attempt data
+  code            String   @db.Text
+  language        String   @default("javascript")
+
+  // Results (JSON)
+  testResults     Json
+
+  // Metrics
+  correctness     Float
+  efficiency      Float
+  elegance        Float
+  readability     Float
+  overallScore    Float
+
+  // Metadata
+  attemptNumber   Int
+  hintsUsed       Int      @default(0)
+  timeSpentMs     BigInt
+  completed       Boolean  @default(false)
+
+  // Analysis (JSON from Analyzer Agent)
+  analysis        Json?
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId, challengeId])
+  @@index([createdAt])
+}
+
+model Solution {
+  id              String   @id @default(uuid())
+
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  challengeId     String
+  challenge       Challenge @relation(fields: [challengeId], references: [id])
+
+  // Solution
+  code            String   @db.Text
+  language        String
+
+  // Metrics
+  metrics         Json
+
+  // Social
+  visibility      String   @default("public")
+  views           Int      @default(0)
+  upvotes         Int      @default(0)
+
+  // Relations
+  comments        Comment[]
+  upvotedBy       SolutionUpvote[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([challengeId, upvotes])
+}
+
+model Comment {
+  id              String   @id @default(uuid())
+
+  solutionId      String
+  solution        Solution @relation(fields: [solutionId], references: [id])
+
+  userId          String
+  content         String   @db.Text
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([solutionId])
+}
+
+model SolutionUpvote {
+  userId          String
+  solutionId      String
+  solution        Solution @relation(fields: [solutionId], references: [id])
+
+  createdAt       DateTime @default(now())
+
+  @@id([userId, solutionId])
+}
+
+model UserSkill {
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  skill           String
+  proficiency     Float
+  lastPracticed   DateTime
+
+  @@id([userId, skill])
+  @@index([skill, proficiency])
+}
+
+model Achievement {
+  id              String   @id @default(uuid())
+  slug            String   @unique
+
+  name            String
+  description     String
+  icon            String
+
+  createdAt       DateTime @default(now())
+}
+
+model UserAchievement {
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  achievementId   String
+  unlockedAt      DateTime @default(now())
+
+  @@id([userId, achievementId])
+}
+
+model AgentLog {
+  id              String   @id @default(uuid())
+
+  userId          String?
+  agentType       String
+  eventType       String
+
+  // I/O (JSON)
+  input           Json
+  output          Json
+
+  // Performance
+  processingTimeMs Int
+
+  createdAt       DateTime @default(now())
+
+  @@index([agentType, eventType])
+  @@index([createdAt])
+}
