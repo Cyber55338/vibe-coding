@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "hello-world",
+    "title": "Hello World",
+    "description": "Your first programming challenge! Write a function that returns 'Hello World'.",
+    "instructions": "Create a function called `solution()` that returns the string 'Hello World'.",
+    "starterCode": "function solution() {\n  // Write your code here\n  \n}",
+    "solution": "function solution() {\n  return 'Hello World';\n}",
+    "module": "sequence-station",
+    "difficulty": 1,
+    "estimatedTime": 5,
+    "concepts": ["Functions", "Strings", "Return Values"],
+    "testCases": [
+      {
+        "input": null,
+        "expectedOutput": "Hello World",
+        "description": "Returns the correct greeting"
+      }
+    ],
+    "hints": [
+      "Start by declaring a function using the function keyword",
+      "Functions can return values using the 'return' keyword",
+      "Strings are text enclosed in quotes",
+      "The function should return exactly 'Hello World'",
+      "Solution: function solution() { return 'Hello World'; }"
+    ],
+    "order": 1
+  },
+  {
+    "slug": "add-two-numbers",
+    "title": "Add Two Numbers",
+    "description": "Learn about function parameters and arithmetic operations.",
+    "instructions": "Create a function called `solution(a, b)` that takes two numbers and returns their sum.",
+    "starterCode": "function solution(a, b) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(a, b) {\n  return a + b;\n}",
+    "module": "sequence-station",
+    "difficulty": 1,
+    "estimatedTime": 5,
+    "concepts": ["Functions", "Parameters", "Arithmetic", "Addition"],
+    "testCases": [
+      {
+        "input": { "a": 2, "b": 3 },
+        "expectedOutput": 5,
+        "description": "2 + 3 = 5"
+      },
+      {
+        "input": { "a": 10, "b": 20 },
+        "expectedOutput": 30,
+        "description": "10 + 20 = 30"
+      },
+      {
+        "input": { "a": -5, "b": 5 },
+        "expectedOutput": 0,
+        "description": "-5 + 5 = 0"
+      }
+    ],
+    "hints": [
+      "Functions can accept parameters (inputs)",
+      "Parameters are listed in parentheses after the function name",
+      "Use the + operator to add numbers",
+      "Return the result using the return keyword",
+      "Solution: return a + b;"
+    ],
+    "order": 2
+  },
+  {
+    "slug": "is-even",
+    "title": "Is Even?",
+    "description": "Learn about conditionals and the modulo operator.",
+    "instructions": "Create a function called `solution(num)` that returns true if the number is even, false otherwise.",
+    "starterCode": "function solution(num) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(num) {\n  return num % 2 === 0;\n}",
+    "module": "sequence-station",
+    "difficulty": 2,
+    "estimatedTime": 10,
+    "concepts": ["Functions", "Conditionals", "Modulo", "Boolean"],
+    "testCases": [
+      {
+        "input": { "num": 4 },
+        "expectedOutput": true,
+        "description": "4 is even"
+      },
+      {
+        "input": { "num": 7 },
+        "expectedOutput": false,
+        "description": "7 is odd"
+      },
+      {
+        "input": { "num": 0 },
+        "expectedOutput": true,
+        "description": "0 is even"
+      }
+    ],
+    "hints": [
+      "The modulo operator (%) gives the remainder of division",
+      "Even numbers have a remainder of 0 when divided by 2",
+      "Use the === operator to check for equality",
+      "You can return the result of a comparison directly",
+      "Solution: return num % 2 === 0;"
+    ],
+    "order": 3
+  },
+  {
+    "slug": "max-of-two",
+    "title": "Maximum of Two",
+    "description": "Learn to compare values and use conditional logic.",
+    "instructions": "Create a function called `solution(a, b)` that returns the larger of two numbers.",
+    "starterCode": "function solution(a, b) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(a, b) {\n  return a > b ? a : b;\n}",
+    "module": "sequence-station",
+    "difficulty": 2,
+    "estimatedTime": 10,
+    "concepts": ["Functions", "Conditionals", "Comparison", "Ternary Operator"],
+    "testCases": [
+      {
+        "input": { "a": 5, "b": 3 },
+        "expectedOutput": 5,
+        "description": "5 is larger than 3"
+      },
+      {
+        "input": { "a": 2, "b": 8 },
+        "expectedOutput": 8,
+        "description": "8 is larger than 2"
+      },
+      {
+        "input": { "a": 7, "b": 7 },
+        "expectedOutput": 7,
+        "description": "Both are equal, return either"
+      }
+    ],
+    "hints": [
+      "Use the > operator to compare values",
+      "You can use an if-else statement or a ternary operator",
+      "The ternary operator syntax is: condition ? valueIfTrue : valueIfFalse",
+      "If a is greater than b, return a, otherwise return b",
+      "Solution: return a > b ? a : b;"
+    ],
+    "order": 4
+  },
+  {
+    "slug": "string-length",
+    "title": "String Length",
+    "description": "Learn about string properties and methods.",
+    "instructions": "Create a function called `solution(str)` that returns the length of a string.",
+    "starterCode": "function solution(str) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(str) {\n  return str.length;\n}",
+    "module": "sequence-station",
+    "difficulty": 1,
+    "estimatedTime": 5,
+    "concepts": ["Functions", "Strings", "Properties"],
+    "testCases": [
+      {
+        "input": { "str": "hello" },
+        "expectedOutput": 5,
+        "description": "'hello' has 5 characters"
+      },
+      {
+        "input": { "str": "" },
+        "expectedOutput": 0,
+        "description": "Empty string has 0 characters"
+      },
+      {
+        "input": { "str": "JavaScript" },
+        "expectedOutput": 10,
+        "description": "'JavaScript' has 10 characters"
+      }
+    ],
+    "hints": [
+      "Strings have a built-in length property",
+      "Access properties using dot notation",
+      "The length property doesn't need parentheses (it's not a method)",
+      "Return the length directly",
+      "Solution: return str.length;"
+    ],
+    "order": 5
+  },
+  {
+    "slug": "celsius-to-fahrenheit",
+    "title": "Celsius to Fahrenheit",
+    "description": "Apply mathematical formulas in code.",
+    "instructions": "Create a function called `solution(celsius)` that converts Celsius to Fahrenheit using the formula: F = C × 9/5 + 32",
+    "starterCode": "function solution(celsius) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(celsius) {\n  return celsius * 9/5 + 32;\n}",
+    "module": "sequence-station",
+    "difficulty": 2,
+    "estimatedTime": 10,
+    "concepts": ["Functions", "Arithmetic", "Formulas"],
+    "testCases": [
+      {
+        "input": { "celsius": 0 },
+        "expectedOutput": 32,
+        "description": "0°C = 32°F"
+      },
+      {
+        "input": { "celsius": 100 },
+        "expectedOutput": 212,
+        "description": "100°C = 212°F"
+      },
+      {
+        "input": { "celsius": -40 },
+        "expectedOutput": -40,
+        "description": "-40°C = -40°F"
+      }
+    ],
+    "hints": [
+      "Use the formula: F = C × 9/5 + 32",
+      "Follow the order of operations (multiplication before addition)",
+      "You can write 9/5 directly in JavaScript",
+      "Return the calculated value",
+      "Solution: return celsius * 9/5 + 32;"
+    ],
+    "order": 6
+  },
+  {
+    "slug": "absolute-value",
+    "title": "Absolute Value",
+    "description": "Learn about conditionals and absolute values.",
+    "instructions": "Create a function called `solution(num)` that returns the absolute value of a number (always positive).",
+    "starterCode": "function solution(num) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(num) {\n  return num < 0 ? -num : num;\n}",
+    "module": "sequence-station",
+    "difficulty": 2,
+    "estimatedTime": 10,
+    "concepts": ["Functions", "Conditionals", "Negation"],
+    "testCases": [
+      {
+        "input": { "num": 5 },
+        "expectedOutput": 5,
+        "description": "5 is already positive"
+      },
+      {
+        "input": { "num": -5 },
+        "expectedOutput": 5,
+        "description": "-5 becomes 5"
+      },
+      {
+        "input": { "num": 0 },
+        "expectedOutput": 0,
+        "description": "0 stays 0"
+      }
+    ],
+    "hints": [
+      "If a number is negative, negate it to make it positive",
+      "Use the < operator to check if a number is negative",
+      "Negate a number using the - operator",
+      "If the number is already positive or zero, return it as is",
+      "Solution: return num < 0 ? -num : num;"
+    ],
+    "order": 7
+  },
+  {
+    "slug": "first-character",
+    "title": "First Character",
+    "description": "Learn about string indexing and accessing characters.",
+    "instructions": "Create a function called `solution(str)` that returns the first character of a string.",
+    "starterCode": "function solution(str) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(str) {\n  return str[0];\n}",
+    "module": "sequence-station",
+    "difficulty": 1,
+    "estimatedTime": 5,
+    "concepts": ["Functions", "Strings", "Indexing"],
+    "testCases": [
+      {
+        "input": { "str": "hello" },
+        "expectedOutput": "h",
+        "description": "First character of 'hello' is 'h'"
+      },
+      {
+        "input": { "str": "Z" },
+        "expectedOutput": "Z",
+        "description": "First character of 'Z' is 'Z'"
+      },
+      {
+        "input": { "str": "JavaScript" },
+        "expectedOutput": "J",
+        "description": "First character of 'JavaScript' is 'J'"
+      }
+    ],
+    "hints": [
+      "Strings can be accessed like arrays",
+      "Use square brackets [] to access a character by index",
+      "Indexing starts at 0 (first character is at index 0)",
+      "Return the character at index 0",
+      "Solution: return str[0];"
+    ],
+    "order": 8
+  },
+  {
+    "slug": "is-positive",
+    "title": "Is Positive?",
+    "description": "Practice with comparisons and boolean logic.",
+    "instructions": "Create a function called `solution(num)` that returns true if the number is positive (greater than 0), false otherwise.",
+    "starterCode": "function solution(num) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(num) {\n  return num > 0;\n}",
+    "module": "sequence-station",
+    "difficulty": 1,
+    "estimatedTime": 5,
+    "concepts": ["Functions", "Comparison", "Boolean"],
+    "testCases": [
+      {
+        "input": { "num": 5 },
+        "expectedOutput": true,
+        "description": "5 is positive"
+      },
+      {
+        "input": { "num": -3 },
+        "expectedOutput": false,
+        "description": "-3 is not positive"
+      },
+      {
+        "input": { "num": 0 },
+        "expectedOutput": false,
+        "description": "0 is not positive"
+      }
+    ],
+    "hints": [
+      "Use the > operator to check if a number is greater than 0",
+      "The comparison returns a boolean (true or false)",
+      "You can return the comparison result directly",
+      "Zero is not considered positive",
+      "Solution: return num > 0;"
+    ],
+    "order": 9
+  },
+  {
+    "slug": "circle-area",
+    "title": "Circle Area",
+    "description": "Calculate the area of a circle using formulas.",
+    "instructions": "Create a function called `solution(radius)` that calculates the area of a circle using the formula: A = π × r²",
+    "starterCode": "function solution(radius) {\n  // Write your code here\n  \n}",
+    "solution": "function solution(radius) {\n  return Math.PI * radius * radius;\n}",
+    "module": "sequence-station",
+    "difficulty": 2,
+    "estimatedTime": 10,
+    "concepts": ["Functions", "Arithmetic", "Math Constants", "Formulas"],
+    "testCases": [
+      {
+        "input": { "radius": 1 },
+        "expectedOutput": 3.141592653589793,
+        "description": "Area of circle with radius 1"
+      },
+      {
+        "input": { "radius": 5 },
+        "expectedOutput": 78.53981633974483,
+        "description": "Area of circle with radius 5"
+      },
+      {
+        "input": { "radius": 10 },
+        "expectedOutput": 314.1592653589793,
+        "description": "Area of circle with radius 10"
+      }
+    ],
+    "hints": [
+      "Use the formula: A = π × r²",
+      "JavaScript provides Math.PI for the value of π",
+      "r² means r multiplied by r",
+      "Multiply Math.PI by radius * radius",
+      "Solution: return Math.PI * radius * radius;"
+    ],
+    "order": 10
+  }
+]
