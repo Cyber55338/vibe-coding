@@ -20,6 +20,19 @@ async function seedChallenges() {
     console.log(`✓ Created/Updated challenge: ${challengeData.title}`);
   }
 
+  // Load Module 2 challenges
+  const module2Path = path.join(__dirname, '../data/challenges/module2-loop-gardens.json');
+  const module2Data = JSON.parse(fs.readFileSync(module2Path, 'utf-8'));
+
+  for (const challengeData of module2Data) {
+    await prisma.challenge.upsert({
+      where: { slug: challengeData.slug },
+      update: challengeData,
+      create: challengeData,
+    });
+    console.log(`✓ Created/Updated challenge: ${challengeData.title}`);
+  }
+
   console.log('✅ Challenges seeded successfully!');
 }
 
