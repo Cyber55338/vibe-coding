@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Progress } from '../ui/Progress';
 import { updateCode, executeStart, executeSuccess, executeFailure } from '@/store/slices/challengeSlice';
+import { api } from '@/lib/api';
 
 interface ChallengeViewProps {
   challengeId: string;
@@ -22,24 +23,40 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ challengeId }) => 
   const [currentHintLevel, setCurrentHintLevel] = useState(0);
 
   // Mock challenge data (will be fetched from API)
-  const challenge = {
-    title: 'Hello World',
-    description: 'Write a function that returns "Hello World"',
-    instructions: 'Create a function called solution() that returns the string "Hello World"',
-    difficulty: 1,
-    estimatedTime: 5,
-    concepts: ['Functions', 'Strings', 'Return Values'],
-    testCases: [
-      { input: null, expectedOutput: 'Hello World', description: 'Returns correct string' }
-    ],
-    hints: [
-      'Start by declaring a function',
-      'Functions use the "function" keyword or arrow syntax',
-      'Use the "return" keyword to return a value',
-      'Strings are enclosed in quotes',
-      'The exact solution: function solution() { return "Hello World"; }'
-    ],
+  const [challenge, setChallenge] = useState<any>(null);
+  const [loadingChallenge, setLoadingChallenge] = useState(true);
+
+  useEffect(() => {
+    fetchChallenge();
+  }, [challengeId]);
+
+  const fetchChallenge = async () => {
+    try {
+      const data = await api.getChallenge(challengeId);
+      setChallenge(data);
+      dispatch(updateCode(data.starterCode || '// Write your solution here\n'));
+    } catch (error) {
+      console.error('Failed to fetch challenge:', error);
+    } finally {
+      setLoadingChallenge(false);
+    }
   };
+
+  if (loadingChallenge) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-xl">Loading challenge...</div>
+      </div>
+    );
+  }
+
+  if (!challenge) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-xl">Challenge not found</div>
+      </div>
+    );
+  }
 
   const handleCodeChange = (newCode: string) => {
     dispatch(updateCode(newCode));
@@ -50,21 +67,11 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ challengeId }) => 
     dispatch(executeStart());
 
     try {
-      // Call backend API to execute code
-      const response = await fetch('/api/attempts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({
-          challengeId,
-          code,
-          language: 'javascript',
-        }),
+      const result = await api.submitAttempt({
+        challengeId: challenge.id,
+        code,
+        language: 'javascript',
       });
-
-      const result = await response.json();
 
       dispatch(executeSuccess(result));
 
@@ -74,8 +81,8 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ challengeId }) => 
       } else {
         setBmadPhase('deploy');
       }
-    } catch (error) {
-      dispatch(executeFailure('Execution failed'));
+    } catch (error: any) {
+      dispatch(executeFailure(error.message || 'Execution failed'));
       setBmadPhase('build');
     }
   };
