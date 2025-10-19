@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vibe - Learn Context Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            color: #000;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-bottom: 2px solid #000;
+            z-index: 100;
+            padding: 12px 20px;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+        }
+
+        .flame {
+            font-size: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .hearts {
+            display: flex;
+            gap: 3px;
+        }
+
+        .heart {
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .heart.lost {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 20px;
+        }
+
+        /* Progress Bar */
+        .lesson-progress {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #e5e5e5;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #58CC02;
+            transition: width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Challenge Card */
+        .challenge-card {
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 0 #000;
+        }
+
+        .challenge-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .challenge-instruction {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        /* Drag & Drop */
+        .drag-container {
+            min-height: 150px;
+            border: 3px dashed #000;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f8f8f8;
+            transition: all 0.3s;
+        }
+
+        .drag-container.drag-over {
+            background: #58CC02;
+            border-color: #58CC02;
+            transform: scale(1.02);
+        }
+
+        .draggable {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: 600;
+            transition: all 0.2s;
+            touch-action: none;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone {
+            min-height: 120px;
+            border: 3px dashed #999;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.active {
+            border-color: #58CC02;
+            background: #f0fff0;
+        }
+
+        .drop-zone-placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Multiple Choice */
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 18px 24px;
+            border: 3px solid #000;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .option:hover {
+            background: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        .option:active {
+            transform: translateY(0);
+        }
+
+        .option.selected {
+            background: #e3f2fd;
+            border-color: #1976d2;
+        }
+
+        .option.correct {
+            background: #58CC02;
+            color: #fff;
+            border-color: #58CC02;
+            animation: bounce 0.5s;
+        }
+
+        .option.wrong {
+            background: #FF4B4B;
+            color: #fff;
+            border-color: #FF4B4B;
+            animation: shake 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Fill in the Blank */
+        .sentence-builder {
+            font-size: 20px;
+            line-height: 2;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            border: 2px solid #000;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            padding: 8px 16px;
+            border: 2px dashed #000;
+            border-radius: 8px;
+            margin: 0 5px;
+            background: #fff;
+            min-height: 40px;
+            vertical-align: middle;
+        }
+
+        .blank.filled {
+            border-style: solid;
+            background: #58CC02;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: 3px solid #000;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 0 #000;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: #58CC02;
+            color: #fff;
+            border-color: #58CC02;
+            box-shadow: 0 4px 0 #46a302;
+        }
+
+        .btn-primary:hover {
+            background: #46a302;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            box-shadow: 0 4px 0 #999;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Feedback */
+        .feedback {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: #fff;
+            border-top: 3px solid #000;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 200;
+        }
+
+        .feedback.show {
+            transform: translateY(0);
+        }
+
+        .feedback.correct {
+            background: #58CC02;
+            color: #fff;
+        }
+
+        .feedback.wrong {
+            background: #FF4B4B;
+            color: #fff;
+        }
+
+        .feedback-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feedback-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .xp-gain {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #58CC02;
+            position: absolute;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #58CC02;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Context Window Visualizer */
+        .context-window {
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .context-meter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .context-bar {
+            height: 30px;
+            background: #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        .context-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #58CC02 0%, #FFC800 70%, #FF4B4B 100%);
+            transition: width 0.3s;
+            position: relative;
+        }
+
+        .context-label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-weight: 700;
+            font-size: 12px;
+            color: #000;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .challenge-card {
+                padding: 20px;
+            }
+
+            .challenge-title {
+                font-size: 20px;
+            }
+
+            .challenge-instruction {
+                font-size: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat {
+                font-size: 14px;
+            }
+        }
+
+        /* Celebration Screen */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(88, 204, 2, 0.95);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+        }
+
+        .celebration.show {
+            display: flex;
+        }
+
+        .celebration-content {
+            animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .celebration-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .celebration-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .celebration-xp {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🎯 Vibe</div>
+            <div class="stats">
+                <div class="stat">
+                    <span class="flame">🔥</span>
+                    <span id="streak">0</span>
+                </div>
+                <div class="stat">
+                    <span id="xp">0</span> XP
+                </div>
+                <div class="hearts" id="hearts">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Progress -->
+        <div class="lesson-progress">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Challenge Container -->
+        <div id="challenge-container">
+            <!-- Challenges will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <!-- Feedback Bar -->
+    <div class="feedback" id="feedback">
+        <div class="feedback-content">
+            <div class="feedback-title">
+                <span id="feedback-icon">✓</span>
+                <span id="feedback-title-text">Correct!</span>
+            </div>
+            <div class="feedback-message" id="feedback-message"></div>
+            <div class="xp-gain" id="xp-display" style="display: none;">
+                <span>+10 XP</span>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" id="continue-btn" onclick="nextChallenge()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Screen -->
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <div class="celebration-icon">🎉</div>
+            <div class="celebration-title">Lesson Complete!</div>
+            <div class="celebration-xp">+50 XP Bonus</div>
+            <button class="btn btn-primary" onclick="location.reload()">Next Lesson</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            currentLesson: 0,
+            xp: parseInt(localStorage.getItem('xp')) || 0,
+            streak: parseInt(localStorage.getItem('streak')) || 0,
+            hearts: 5,
+            totalLessons: 5
+        };
+
+        // Lesson Data
+        const lessons = [
+            {
+                type: 'multipleChoice',
+                title: 'What is Context Engineering?',
+                instruction: 'Select the best definition:',
+                question: 'Context Engineering is:',
+                options: [
+                    'Writing traditional code',
+                    'The art of providing the right context to AI models to solve tasks effectively',
+                    'Debugging software',
+                    'Designing user interfaces'
+                ],
+                correctIndex: 1,
+                explanation: 'Perfect! Context Engineering is about carefully crafting the information you give to AI to get the best results.',
+                xp: 10
+            },
+            {
+                type: 'dragDrop',
+                title: 'Build Your First Prompt',
+                instruction: 'Drag words to complete this effective prompt:',
+                template: ['Create a', 'BLANK', 'that takes a', 'BLANK', 'and returns', 'BLANK'],
+                wordBank: ['function', 'variable', 'class', 'number', 'string', 'doubled value', 'error', 'nothing'],
+                correctAnswers: ['function', 'number', 'doubled value'],
+                explanation: 'Excellent! A specific prompt with clear inputs and outputs gets better AI results.',
+                xp: 15
+            },
+            {
+                type: 'contextWindow',
+                title: 'Context Window Challenge',
+                instruction: 'You have 4096 tokens. Drag ONLY the essential context:',
+                task: 'Fix this bug: "TypeError: Cannot read property \'name\' of undefined"',
+                items: [
+                    { text: 'Error message', tokens: 50, essential: true },
+                    { text: 'Relevant code (20 lines)', tokens: 200, essential: true },
+                    { text: 'Entire codebase', tokens: 5000, essential: false },
+                    { text: 'What you tried', tokens: 100, essential: true },
+                    { text: 'Random file', tokens: 300, essential: false }
+                ],
+                maxTokens: 4096,
+                explanation: 'Great! You included only essential context, making the AI response faster and more accurate.',
+                xp: 20
+            },
+            {
+                type: 'fillBlank',
+                title: 'Complete the Prompt',
+                instruction: 'Fill in the blanks to make this prompt specific:',
+                sentence: 'Create a BLANK component that BLANK when user BLANK',
+                wordBank: ['React', 'button', 'modal', 'clicks', 'hovers', 'displays error', 'shows toast'],
+                correctAnswers: ['React', 'displays error', 'clicks'],
+                explanation: 'Perfect! Specific prompts with clear components, actions, and triggers work best.',
+                xp: 15
+            },
+            {
+                type: 'multipleChoice',
+                title: 'Best Practice Check',
+                instruction: 'What makes a prompt effective?',
+                question: 'The MOST important element of a good prompt is:',
+                options: [
+                    'Being as short as possible',
+                    'Using lots of technical jargon',
+                    'Being specific and providing clear context',
+                    'Writing in all caps'
+                ],
+                correctIndex: 2,
+                explanation: 'Exactly! Specific prompts with clear context help AI understand exactly what you need.',
+                xp: 10
+            }
+        ];
+
+        // Initialize
+        function init() {
+            updateStats();
+            loadChallenge(gameState.currentLesson);
+        }
+
+        // Update Stats Display
+        function updateStats() {
+            document.getElementById('xp').textContent = gameState.xp;
+            document.getElementById('streak').textContent = gameState.streak;
+            updateHearts();
+            localStorage.setItem('xp', gameState.xp);
+            localStorage.setItem('streak', gameState.streak);
+        }
+
+        function updateHearts() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart, index) => {
+                if (index >= gameState.hearts) {
+                    heart.classList.add('lost');
+                } else {
+                    heart.classList.remove('lost');
+                }
+            });
+        }
+
+        // Load Challenge
+        function loadChallenge(index) {
+            const lesson = lessons[index];
+            const container = document.getElementById('challenge-container');
+            const progress = (index / gameState.totalLessons) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            let html = `
+                <div class="challenge-card">
+                    <div class="challenge-title">${lesson.title}</div>
+                    <div class="challenge-instruction">${lesson.instruction}</div>
+            `;
+
+            switch(lesson.type) {
+                case 'multipleChoice':
+                    html += renderMultipleChoice(lesson);
+                    break;
+                case 'dragDrop':
+                    html += renderDragDrop(lesson);
+                    break;
+                case 'contextWindow':
+                    html += renderContextWindow(lesson);
+                    break;
+                case 'fillBlank':
+                    html += renderFillBlank(lesson);
+                    break;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Initialize drag & drop if needed
+            if (lesson.type === 'dragDrop' || lesson.type === 'contextWindow' || lesson.type === 'fillBlank') {
+                initDragDrop();
+            }
+        }
+
+        // Render Multiple Choice
+        function renderMultipleChoice(lesson) {
+            let html = `<div class="options">`;
+            lesson.options.forEach((option, index) => {
+                html += `
+                    <div class="option" onclick="selectOption(${index}, ${lesson.correctIndex})">
+                        ${option}
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            return html;
+        }
+
+        // Render Drag & Drop
+        function renderDragDrop(lesson) {
+            let html = `
+                <div class="sentence-builder">
+            `;
+
+            lesson.template.forEach((word, index) => {
+                if (word === 'BLANK') {
+                    html += `<span class="blank" data-index="${index}" ondrop="drop(event)" ondragover="allowDrop(event)"></span>`;
+                } else {
+                    html += `<span>${word}</span>`;
+                }
+            });
+
+            html += `
+                </div>
+                <div class="word-bank">
+            `;
+
+            lesson.wordBank.forEach((word, index) => {
+                html += `
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" data-word="${word}">
+                        ${word}
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkDragDropAnswer()">Check Answer</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Render Context Window
+        function renderContextWindow(lesson) {
+            let html = `
+                <div class="context-window">
+                    <div class="context-meter">
+                        <span>Context Window</span>
+                        <span id="token-count">0 / ${lesson.maxTokens} tokens</span>
+                    </div>
+                    <div class="context-bar">
+                        <div class="context-fill" id="context-fill" style="width: 0%"></div>
+                        <div class="context-label">Available Space</div>
+                    </div>
+                </div>
+                <div class="drop-zone" id="drop-zone" ondrop="dropContext(event)" ondragover="allowDrop(event)">
+                    <span class="drop-zone-placeholder">Drag essential context here...</span>
+                </div>
+                <div class="drag-container">
+            `;
+
+            lesson.items.forEach((item, index) => {
+                html += `
+                    <div class="draggable" draggable="true" ondragstart="dragContext(event)"
+                         data-index="${index}" data-tokens="${item.tokens}" data-essential="${item.essential}">
+                        ${item.text} <small>(${item.tokens} tokens)</small>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkContextAnswer()">Check Answer</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Render Fill Blank
+        function renderFillBlank(lesson) {
+            const parts = lesson.sentence.split('BLANK');
+            let html = `<div class="sentence-builder">`;
+
+            parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < parts.length - 1) {
+                    html += `<span class="blank" data-index="${index}" ondrop="drop(event)" ondragover="allowDrop(event)"></span>`;
+                }
+            });
+
+            html += `</div><div class="word-bank">`;
+
+            lesson.wordBank.forEach((word) => {
+                html += `
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" data-word="${word}">
+                        ${word}
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkFillBlankAnswer()">Check Answer</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Drag & Drop Functions
+        function drag(event) {
+            event.dataTransfer.setData('text', event.target.dataset.word);
+            event.target.classList.add('dragging');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const word = event.dataTransfer.getData('text');
+            const target = event.target;
+
+            if (target.classList.contains('blank')) {
+                target.textContent = word;
+                target.classList.add('filled');
+
+                // Remove dragged element
+                const dragged = document.querySelector('.dragging');
+                if (dragged) {
+                    dragged.remove();
+                }
+            }
+        }
+
+        function dragContext(event) {
+            event.dataTransfer.setData('index', event.target.dataset.index);
+            event.dataTransfer.setData('tokens', event.target.dataset.tokens);
+            event.dataTransfer.setData('essential', event.target.dataset.essential);
+            event.target.classList.add('dragging');
+        }
+
+        let currentTokens = 0;
+        let selectedItems = [];
+
+        function dropContext(event) {
+            event.preventDefault();
+            const index = event.dataTransfer.getData('index');
+            const tokens = parseInt(event.dataTransfer.getData('tokens'));
+            const essential = event.dataTransfer.getData('essential') === 'true';
+            const lesson = lessons[gameState.currentLesson];
+
+            if (currentTokens + tokens <= lesson.maxTokens) {
+                currentTokens += tokens;
+                selectedItems.push({ index: parseInt(index), essential });
+
+                const dragged = document.querySelector('.dragging');
+                if (dragged) {
+                    const dropZone = document.getElementById('drop-zone');
+                    const placeholder = dropZone.querySelector('.drop-zone-placeholder');
+                    if (placeholder) placeholder.remove();
+                    dropZone.appendChild(dragged.cloneNode(true));
+                    dragged.remove();
+                }
+
+                updateContextMeter();
+            }
+        }
+
+        function updateContextMeter() {
+            const lesson = lessons[gameState.currentLesson];
+            const percentage = (currentTokens / lesson.maxTokens) * 100;
+            document.getElementById('token-count').textContent = `${currentTokens} / ${lesson.maxTokens} tokens`;
+            document.getElementById('context-fill').style.width = percentage + '%';
+        }
+
+        function initDragDrop() {
+            document.querySelectorAll('.draggable').forEach(item => {
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+        }
+
+        // Answer Checking
+        function selectOption(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selectedIndex === correctIndex) {
+                options[selectedIndex].classList.add('correct');
+                showFeedback(true, lessons[gameState.currentLesson].explanation);
+            } else {
+                options[selectedIndex].classList.add('wrong');
+                options[correctIndex].classList.add('correct');
+                loseHeart();
+                showFeedback(false, 'Not quite! ' + lessons[gameState.currentLesson].explanation);
+            }
+        }
+
+        function checkDragDropAnswer() {
+            const lesson = lessons[gameState.currentLesson];
+            const blanks = document.querySelectorAll('.blank');
+            let correct = true;
+
+            blanks.forEach((blank, index) => {
+                if (blank.textContent !== lesson.correctAnswers[index]) {
+                    correct = false;
+                }
+            });
+
+            if (correct) {
+                showFeedback(true, lesson.explanation);
+            } else {
+                loseHeart();
+                showFeedback(false, 'Try again! ' + lesson.explanation);
+            }
+        }
+
+        function checkContextAnswer() {
+            const lesson = lessons[gameState.currentLesson];
+            const allEssential = selectedItems.every(item => item.essential);
+            const hasAllEssential = lesson.items.filter(item => item.essential).every(item =>
+                selectedItems.some(selected => selected.index === lesson.items.indexOf(item))
+            );
+
+            if (allEssential && hasAllEssential) {
+                showFeedback(true, lesson.explanation);
+            } else {
+                loseHeart();
+                showFeedback(false, 'Not quite! Make sure to include ALL essential context and exclude non-essential items.');
+            }
+        }
+
+        function checkFillBlankAnswer() {
+            const lesson = lessons[gameState.currentLesson];
+            const blanks = document.querySelectorAll('.blank');
+            let correct = true;
+
+            blanks.forEach((blank, index) => {
+                if (blank.textContent !== lesson.correctAnswers[index]) {
+                    correct = false;
+                }
+            });
+
+            if (correct) {
+                showFeedback(true, lesson.explanation);
+            } else {
+                loseHeart();
+                showFeedback(false, 'Try again! Think about what makes the prompt most specific.');
+            }
+        }
+
+        // Feedback
+        function showFeedback(isCorrect, message) {
+            const feedback = document.getElementById('feedback');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title-text');
+            const msg = document.getElementById('feedback-message');
+            const xpDisplay = document.getElementById('xp-display');
+
+            feedback.classList.remove('correct', 'wrong');
+
+            if (isCorrect) {
+                feedback.classList.add('correct');
+                icon.textContent = '✓';
+                title.textContent = 'Amazing!';
+                msg.textContent = message;
+
+                const lesson = lessons[gameState.currentLesson];
+                gameState.xp += lesson.xp;
+                updateStats();
+
+                xpDisplay.textContent = `+${lesson.xp} XP`;
+                xpDisplay.style.display = 'inline-flex';
+
+                createConfetti();
+            } else {
+                feedback.classList.add('wrong');
+                icon.textContent = '✗';
+                title.textContent = 'Not quite!';
+                msg.textContent = message;
+                xpDisplay.style.display = 'none';
+            }
+
+            feedback.classList.add('show');
+        }
+
+        function loseHeart() {
+            if (gameState.hearts > 0) {
+                gameState.hearts--;
+                updateHearts();
+            }
+        }
+
+        function nextChallenge() {
+            document.getElementById('feedback').classList.remove('show');
+
+            gameState.currentLesson++;
+
+            if (gameState.currentLesson >= gameState.totalLessons) {
+                showCelebration();
+            } else {
+                setTimeout(() => {
+                    loadChallenge(gameState.currentLesson);
+                }, 300);
+            }
+        }
+
+        function showCelebration() {
+            gameState.xp += 50;
+            gameState.streak++;
+            updateStats();
+
+            document.getElementById('celebration').classList.add('show');
+            createConfetti(50);
+        }
+
+        function createConfetti(count = 20) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = ['#58CC02', '#FFC800', '#FF4B4B', '#1CB0F6'][Math.floor(Math.random() * 4)];
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // Initialize game
+        init();
+    </script>
+</body>
+</html>
